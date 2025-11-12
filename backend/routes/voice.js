@@ -3,6 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const FormData = require('form-data');
 const axios = require('axios');
+const jwt = require('jsonwebtoken');
 
 // Configure multer for audio file uploads
 const storage = multer.memoryStorage();
@@ -10,6 +11,26 @@ const upload = multer({
   storage: storage,
   limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
 });
+
+// Middleware to verify JWT token (optional for voice processing)
+const authenticateToken = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+
+  if (!token) {
+    // Allow unauthenticated access for demo/testing
+    req.user = null;
+    return next();
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
+    req.user = decoded;
+    next();
+  } catch (error) {
+    req.user = null;
+    next();
+  }
+};
 
 // Language configurations
 const languageConfig = {
@@ -113,7 +134,7 @@ function extractEntities(text, intent) {
 }
 
 // Process voice command
-router.post('/process', upload.single('audio'), async (req, res) => {
+router.post('/process', authenticateToken, upload.single('audio'), async (req, res) => {
   try {
     const { language = 'hi-IN' } = req.body;
     

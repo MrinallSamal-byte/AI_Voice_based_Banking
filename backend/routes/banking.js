@@ -93,6 +93,31 @@ router.get('/transactions', authenticateToken, (req, res) => {
 router.post('/transfer', authenticateToken, async (req, res) => {
   try {
     const { recipientPhone, amount, pin } = req.body;
+    
+    // Input validation
+    if (!recipientPhone || !amount || !pin) {
+      return res.status(400).json({
+        success: false,
+        error: 'Recipient phone, amount, and PIN are required'
+      });
+    }
+
+    if (isNaN(amount) || amount <= 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid amount'
+      });
+    }
+
+    // Daily transfer limit check
+    const dailyLimit = 50000;
+    if (amount > dailyLimit) {
+      return res.status(400).json({
+        success: false,
+        error: `Transfer amount exceeds daily limit of ₹${dailyLimit}`
+      });
+    }
+
     const sender = users.get(req.user.phone);
 
     if (!sender) {
@@ -191,6 +216,38 @@ router.post('/transfer', authenticateToken, async (req, res) => {
 router.post('/recharge', authenticateToken, async (req, res) => {
   try {
     const { mobileNumber, amount, operator, pin } = req.body;
+    
+    // Input validation
+    if (!mobileNumber || !amount || !pin) {
+      return res.status(400).json({
+        success: false,
+        error: 'Mobile number, amount, and PIN are required'
+      });
+    }
+
+    if (isNaN(amount) || amount <= 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid amount'
+      });
+    }
+
+    // Validate mobile number format (10 digits)
+    if (!/^\d{10}$/.test(mobileNumber)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid mobile number format'
+      });
+    }
+
+    // Recharge amount limits
+    if (amount < 10 || amount > 10000) {
+      return res.status(400).json({
+        success: false,
+        error: 'Recharge amount must be between ₹10 and ₹10,000'
+      });
+    }
+
     const user = users.get(req.user.phone);
 
     if (!user) {

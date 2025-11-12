@@ -3,13 +3,28 @@ const twilio = require('twilio');
 class SMSService {
   constructor() {
     this.enabled = process.env.SMS_ENABLED === 'true';
+    this.client = null;
     
     if (this.enabled) {
-      this.client = twilio(
-        process.env.TWILIO_ACCOUNT_SID,
-        process.env.TWILIO_AUTH_TOKEN
-      );
-      this.fromNumber = process.env.TWILIO_PHONE_NUMBER;
+      const accountSid = process.env.TWILIO_ACCOUNT_SID;
+      const authToken = process.env.TWILIO_AUTH_TOKEN;
+      
+      // Only initialize if valid Twilio credentials
+      if (accountSid && authToken && 
+          accountSid.startsWith('AC') && 
+          accountSid.length > 30) {
+        try {
+          this.client = twilio(accountSid, authToken);
+          this.fromNumber = process.env.TWILIO_PHONE_NUMBER;
+          console.log('✅ Twilio SMS service initialized');
+        } catch (error) {
+          console.warn('⚠️  Failed to initialize Twilio SMS service:', error.message);
+          this.enabled = false;
+        }
+      } else {
+        console.log('ℹ️  Twilio SMS service not configured (demo mode)');
+        this.enabled = false;
+      }
     }
 
     this.templates = this.buildTemplates();

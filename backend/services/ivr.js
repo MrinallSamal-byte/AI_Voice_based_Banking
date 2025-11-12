@@ -6,9 +6,20 @@ class IVRService {
     this.accountSid = process.env.TWILIO_ACCOUNT_SID;
     this.authToken = process.env.TWILIO_AUTH_TOKEN;
     this.phoneNumber = process.env.TWILIO_PHONE_NUMBER;
+    this.client = null;
     
-    if (this.accountSid && this.authToken) {
-      this.client = twilio(this.accountSid, this.authToken);
+    // Only initialize Twilio client if valid credentials are provided
+    if (this.accountSid && this.authToken && 
+        this.accountSid.startsWith('AC') && 
+        this.accountSid.length > 30) {
+      try {
+        this.client = twilio(this.accountSid, this.authToken);
+        console.log('✅ Twilio IVR service initialized');
+      } catch (error) {
+        console.warn('⚠️  Failed to initialize Twilio IVR service:', error.message);
+      }
+    } else {
+      console.log('ℹ️  Twilio IVR service not configured (demo mode)');
     }
 
     // IVR menu structure

@@ -7,6 +7,12 @@ const path = require('path');
 // Load environment variables
 dotenv.config();
 
+// Validate environment variables
+const { validateEnvironment, displayConfiguration } = require('./config/validateEnv');
+if (!validateEnvironment()) {
+  process.exit(1);
+}
+
 // Import database
 const database = require('./config/database');
 
@@ -26,6 +32,8 @@ const bankingRoutes = require('./routes/banking');
 const voiceRoutes = require('./routes/voice');
 const smsRoutes = require('./routes/sms');
 const ivrRoutes = require('./routes/ivr');
+const advancedRoutes = require('./routes/advanced');
+const qrcodeRoutes = require('./routes/qrcode');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -60,6 +68,8 @@ app.use('/api/banking', bankingRoutes);
 app.use('/api/voice', voiceRoutes);
 app.use('/api/sms', smsRoutes);
 app.use('/api/ivr', ivrRoutes);
+app.use('/api/advanced', advancedRoutes);
+app.use('/api/qrcode', qrcodeRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -91,6 +101,9 @@ app.use((req, res) => {
 // Start server with database connection
 const startServer = async () => {
   try {
+    // Display configuration
+    displayConfiguration();
+    
     // Connect to database
     await database.connect();
     
@@ -102,19 +115,27 @@ const startServer = async () => {
       console.log(`║  🚀 Server:      http://localhost:${PORT}              ║`);
       console.log(`║  📱 Environment: ${(process.env.NODE_ENV || 'development').padEnd(37)}║`);
       console.log(`║  🗣️  Languages:   ${process.env.SUPPORTED_LANGUAGES?.split(',').length || 9} regional languages     ║`);
-      console.log(`║  📞 IVR Support: ${process.env.ENABLE_IVR_SUPPORT === 'true' ? 'Enabled ' : 'Disabled'}                    ║`);
-      console.log(`║  📧 SMS Backup:  ${process.env.ENABLE_SMS_FALLBACK === 'true' ? 'Enabled ' : 'Disabled'}                    ║`);
-      console.log(`║  🔐 Voiceprint:  ${process.env.ENABLE_VOICEPRINT_AUTH === 'true' ? 'Enabled ' : 'Disabled'}                    ║`);
       console.log('╚═══════════════════════════════════════════════════════╝');
       console.log('');
-      console.log('📋 API Endpoints:');
-      console.log('  - POST /api/auth/login          - User login');
-      console.log('  - POST /api/auth/register       - User registration');
-      console.log('  - POST /api/voice/process       - Voice command processing');
-      console.log('  - GET  /api/banking/balance     - Check balance');
-      console.log('  - POST /api/banking/transfer    - Transfer money');
-      console.log('  - POST /api/sms/process         - SMS command processing');
-      console.log('  - POST /api/ivr/welcome         - IVR call handling');
+      console.log('📋 Core API Endpoints:');
+      console.log('  - POST /api/auth/login              - User login');
+      console.log('  - POST /api/auth/register           - User registration');
+      console.log('  - POST /api/voice/process           - Voice command processing');
+      console.log('  - GET  /api/banking/balance         - Check balance');
+      console.log('  - POST /api/banking/transfer        - Transfer money');
+      console.log('  - POST /api/sms/process             - SMS command processing');
+      console.log('  - POST /api/ivr/welcome             - IVR call handling');
+      console.log('');
+      console.log('🚀 Advanced Features:');
+      console.log('  - POST /api/advanced/beneficiary/*  - Beneficiary management');
+      console.log('  - POST /api/advanced/scheduled-payment/* - Scheduled payments');
+      console.log('  - POST /api/advanced/savings-goal/* - Savings goals');
+      console.log('  - POST /api/advanced/dispute/*      - Transaction disputes');
+      console.log('  - POST /api/qrcode/generate         - QR code generation');
+      console.log('  - POST /api/qrcode/pay              - QR code payment');
+      console.log('  - GET  /api/advanced/analytics/*    - Transaction analytics');
+      console.log('');
+      console.log('📚 Documentation: See ADVANCED_FEATURES.md for details');
       console.log('');
     });
   } catch (error) {
