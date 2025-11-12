@@ -11,7 +11,7 @@ const crypto = require('crypto');
  */
 const createRateLimiter = (options = {}) => {
   const {
-    windowMs = parseInt(process.env.RATE_LIMIT_WINDOW) * 60 * 1000 || 15 * 60 * 1000,
+    windowMs = (parseInt(process.env.RATE_LIMIT_WINDOW) || 15) * 60 * 1000,
     max = parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100,
     message = 'Too many requests, please try again later.'
   } = options;

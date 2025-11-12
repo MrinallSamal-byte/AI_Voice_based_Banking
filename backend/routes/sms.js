@@ -32,7 +32,7 @@ router.post('/process', async (req, res) => {
     const user = users.get(phone);
 
     if (!user) {
-      return sendSMS(phone, 'User not registered. Please register first.');
+      await sendSMS(phone, 'User not registered. Please register first.');
       return res.json({
         success: true,
         message: 'SMS sent'
