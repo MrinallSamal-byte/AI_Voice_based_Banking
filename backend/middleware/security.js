@@ -210,9 +210,24 @@ const validateRequest = (schema) => {
  */
 const corsOptions = {
   origin: (origin, callback) => {
-    const allowedOrigins = (process.env.CORS_ORIGIN || '').split(',');
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    const allowedOrigins = (process.env.CORS_ORIGIN || '').split(',').filter(o => o.trim());
     
-    if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV === 'development') {
+    // In development, allow all origins
+    if (process.env.NODE_ENV === 'development') {
+      return callback(null, true);
+    }
+    
+    // In production, check allowed origins
+    if (allowedOrigins.length > 0 && allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else if (allowedOrigins.length === 0) {
+      // If no origins configured, allow all (not recommended for production)
+      console.warn('⚠️  No CORS_ORIGIN configured. Allowing all origins.');
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));

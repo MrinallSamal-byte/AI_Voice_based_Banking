@@ -10,6 +10,13 @@ class Database {
    */
   async connect() {
     try {
+      // Validate MongoDB URI
+      const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/voice_banking';
+      
+      if (!mongoUri.startsWith('mongodb://') && !mongoUri.startsWith('mongodb+srv://')) {
+        throw new Error('Invalid MongoDB URI format. Must start with mongodb:// or mongodb+srv://');
+      }
+
       const options = {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -17,10 +24,7 @@ class Database {
         socketTimeoutMS: 45000,
       };
 
-      this.connection = await mongoose.connect(
-        process.env.MONGODB_URI || 'mongodb://localhost:27017/voice_banking',
-        options
-      );
+      this.connection = await mongoose.connect(mongoUri, options);
 
       console.log('✅ MongoDB connected successfully');
       console.log(`📦 Database: ${this.connection.connection.name}`);
