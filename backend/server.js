@@ -26,6 +26,8 @@ const bankingRoutes = require('./routes/banking');
 const voiceRoutes = require('./routes/voice');
 const smsRoutes = require('./routes/sms');
 const ivrRoutes = require('./routes/ivr');
+const advancedRoutes = require('./routes/advanced');
+const qrcodeRoutes = require('./routes/qrcode');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -60,6 +62,8 @@ app.use('/api/banking', bankingRoutes);
 app.use('/api/voice', voiceRoutes);
 app.use('/api/sms', smsRoutes);
 app.use('/api/ivr', ivrRoutes);
+app.use('/api/advanced', advancedRoutes);
+app.use('/api/qrcode', qrcodeRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
