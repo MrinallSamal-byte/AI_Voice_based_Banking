@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Banking - आवाज से बैंकिंग</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <p>लोड हो रहा है...</p>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="screen active">
+        <div class="container">
+            <div class="logo">
+                <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                    <circle cx="40" cy="40" r="35" fill="#4CAF50"/>
+                    <path d="M40 20C28.95 20 20 28.95 20 40C20 51.05 28.95 60 40 60C51.05 60 60 51.05 60 40C60 28.95 51.05 20 40 20ZM40 30C42.21 30 44 31.79 44 34C44 36.21 42.21 38 40 38C37.79 38 36 36.21 36 34C36 31.79 37.79 30 40 30ZM40 54C35 54 30.58 51.38 28 47.5C28.06 43.5 36 41.3 40 41.3C43.99 41.3 51.94 43.5 52 47.5C49.42 51.38 45 54 40 54Z" fill="white"/>
+                </svg>
+            </div>
+            <h1>आवाज से बैंकिंग</h1>
+            <p class="subtitle">Voice Banking System</p>
+            
+            <div class="card">
+                <h2>लॉगिन करें</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginPhone">मोबाइल नंबर / Mobile Number</label>
+                        <input type="tel" id="loginPhone" placeholder="10 अंकों का नंबर" required maxlength="10">
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPin">पिन / PIN</label>
+                        <input type="password" id="loginPin" placeholder="4 अंकों का पिन" required maxlength="4">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large">
+                        लॉगिन करें
+                    </button>
+                </form>
+                
+                <div class="divider">या</div>
+                
+                <button id="voiceLoginBtn" class="btn btn-voice btn-large">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                        <line x1="12" y1="19" x2="12" y2="23"/>
+                        <line x1="8" y1="23" x2="16" y2="23"/>
+                    </svg>
+                    आवाज से लॉगिन करें
+                </button>
+            </div>
+
+            <div class="language-selector">
+                <label>भाषा चुनें / Select Language:</label>
+                <select id="languageSelect">
+                    <option value="hi-IN">हिंदी (Hindi)</option>
+                    <option value="or-IN">ଓଡ଼ିଆ (Odia)</option>
+                    <option value="bn-IN">বাংলা (Bengali)</option>
+                    <option value="ta-IN">தமிழ் (Tamil)</option>
+                    <option value="te-IN">తెలుగు (Telugu)</option>
+                    <option value="kn-IN">ಕನ್ನಡ (Kannada)</option>
+                    <option value="mr-IN">मराठी (Marathi)</option>
+                    <option value="gu-IN">ગુજરાતી (Gujarati)</option>
+                    <option value="en-IN">English</option>
+                </select>
+            </div>
+
+            <div class="demo-info">
+                <p><strong>डेमो अकाउंट:</strong></p>
+                <p>📱 9876543210 | 🔐 1234</p>
+                <p>📱 9123456789 | 🔐 5678</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Banking Screen -->
+    <div id="bankingScreen" class="screen">
+        <div class="header">
+            <div class="header-left">
+                <button id="menuBtn" class="icon-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+                <div>
+                    <h2 id="userName">स्वागत है</h2>
+                    <p class="account-number" id="accountNumber">ACCxxxxxxxxx</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="connection-status" id="connectionStatus">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+                        <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+                        <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+                        <line x1="12" y1="20" x2="12.01" y2="20"/>
+                    </svg>
+                    <span>ऑनलाइन</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Balance Card -->
+            <div class="balance-card">
+                <p class="balance-label">कुल राशि / Total Balance</p>
+                <h1 class="balance-amount" id="balanceAmount">₹0</h1>
+                <button id="refreshBalanceBtn" class="btn-link">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23 4 23 10 17 10"/>
+                        <polyline points="1 20 1 14 7 14"/>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                    </svg>
+                    रीफ्रेश करें
+                </button>
+            </div>
+
+            <!-- Voice Assistant -->
+            <div class="voice-assistant">
+                <div class="voice-visual" id="voiceVisual">
+                    <div class="pulse"></div>
+                    <div class="pulse pulse-2"></div>
+                    <div class="pulse pulse-3"></div>
+                    <button id="voiceBtn" class="voice-btn">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                            <line x1="12" y1="19" x2="12" y2="23"/>
+                            <line x1="8" y1="23" x2="16" y2="23"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="voice-feedback">
+                    <p id="voiceStatus">माइक पर टैप करें और बोलें</p>
+                    <p id="voiceTranscript" class="transcript"></p>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <h3>त्वरित सेवाएँ / Quick Actions</h3>
+                <div class="action-grid">
+                    <button class="action-btn" data-action="balance">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"/>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                        <span>बैलेंस</span>
+                    </button>
+                    <button class="action-btn" data-action="transfer">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <polyline points="19 12 12 19 5 12"/>
+                        </svg>
+                        <span>भेजें</span>
+                    </button>
+                    <button class="action-btn" data-action="transactions">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        <span>लेनदेन</span>
+                    </button>
+                    <button class="action-btn" data-action="recharge">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                            <line x1="12" y1="18" x2="12.01" y2="18"/>
+                        </svg>
+                        <span>रिचार्ज</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recent Transactions -->
+            <div class="transactions-section">
+                <h3>हाल के लेनदेन / Recent Transactions</h3>
+                <div id="transactionsList" class="transactions-list">
+                    <!-- Transactions will be loaded here -->
+                </div>
+            </div>
+
+            <!-- SMS Mode -->
+            <div class="sms-mode-card">
+                <h4>📱 एसएमएस बैंकिंग / SMS Banking</h4>
+                <p>नेटवर्क नहीं है? एसएमएस से करें बैंकिंग!</p>
+                <code>BAL, SEND 500 9876543210 1234</code>
+                <button id="smsHelpBtn" class="btn btn-secondary btn-small">
+                    एसएमएस कमांड देखें
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
